@@ -1,0 +1,23 @@
+---
+hikers:
+    A: 100
+    B: 50
+    C: 20
+    D: 10
+    E: 2.5
+    F: 25
+    G: 15
+bridges:
+    - length: 100
+      hikers:
+        - A
+        - B
+        - C
+        - D
+    - length: 250
+      hikers:
+        - E
+    - length: 150
+      hikers:
+        - F
+        - G
