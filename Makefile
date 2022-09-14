@@ -3,7 +3,8 @@ PROJ=bridge_problem
 # Compiler variables
 CPP = g++
 CPPFLAGS = -Wall
-LIBS = -L. -lc -lm -lyaml-cpp
+LIB_DIR = .
+LIBS = -lyaml-cpp
 
 # File variables
 SRC_FILES = main.cpp
@@ -13,7 +14,7 @@ all: $(PROJ)
 
 # Build executable
 $(PROJ): $(SRC_FILES)
-	$(CPP) $(CPPFLAGS) -o $@ $^  $(LIBS)
+	$(CPP) $(CPPFLAGS) -o $@ $^ -L$(LIB_DIR) $(LIBS)
 
 # Other Targets
 clean:

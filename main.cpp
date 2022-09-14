@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <iostream>
 
 #include "yaml.h"
@@ -15,8 +16,17 @@ int main() {
 	// Total crossing time
 	double tm = 0.0;
 
+	// Number of hikers (used to check algorithm)
+	std::size_t numHikers = 0;
+
 	// Contains a vector of hikers for each bridge
 	std::vector<HikerVec> hikers;
+
+	// Verify that bridges.yaml is present
+	if(!std::filesystem::exists("bridges.yaml")) {
+		std::cerr << "Couldn't find bridges.yaml. Exiting." << std::endl;
+		exit(EXIT_FAILURE);
+	} 
 
 	// Load YAML file
 	YAML::Node doc = YAML::LoadFile("bridges.yaml");
@@ -31,6 +41,9 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 	
+	// Print verification message
+	std::cout << "Verified bridges.yaml exists, contains hikers/bridges sections" << std::endl << std::endl;
+	
 	// Create vector of hikers for each bridge
 	hikers = initHikers(doc);
 	
@@ -41,6 +54,7 @@ int main() {
 	
 		// Get bridge length and starting/ending hikers
 		len = bridgeNode[i]["length"].as<double>();
+		numHikers += bridgeNode[i]["hikers"].size();
 		HikerVec& startHikers = hikers[i];
 		HikerVec& endHikers = hikers[i+1];
 		
@@ -71,6 +85,18 @@ int main() {
 	}
 
 	std::cout << "Total crossing time: " << tm << " min" << std::endl;
+	
+	// Check vectors to make sure all hikers left starting places
+	int checkSize = 0;
+	for (std::size_t i=0; i<bridgeNode.size(); i++) {
+		checkSize += hikers[i].size();
+	}
+	
+	// Check to make sure all hikers are in final vector
+	if((checkSize == 0) && (hikers.back().size() == numHikers)) {
+		std::cout << "Verified that all " << numHikers << " hikers crossed final bridge" << std::endl;
+	}
+	
 	return 0;
 }
 
